@@ -1,0 +1,34 @@
+{
+  "name": "ds-atelie-back",
+  "version": "1.0.0",
+  "description": "College project destinated to Debora Schranck Ateliê",
+  "type": "module",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pcanabarro/ds-atelie-back.git"
+  },
+  "author": "pcanabarro",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pcanabarro/ds-atelie-back/issues"
+  },
+  "homepage": "https://github.com/pcanabarro/ds-atelie-back#readme",
+  "config": {
+    "port": 3001
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

@@ -8,3 +8,13 @@ by [pcanabarro](https://github.com/pcanabarro), [ism4jly](https://github.com/ism
 ## Intervention
 
 ## Conclusion
+
+### Dotenv template
+``` yaml
+PORT=3001
+DB_USER=your_username
+DB_HOST=your_host
+DB_NAME=your_database
+DB_PASSWORD=your_password
+DB_PORT=5432
+```
