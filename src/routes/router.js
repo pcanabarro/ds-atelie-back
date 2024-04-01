@@ -1,5 +1,5 @@
 import express from 'express'
-import ProductsController from '../controllers/productsController'
+import ProductsController from '../controllers/productsController.js'
 
 export default class Router {
   static getRouter() {

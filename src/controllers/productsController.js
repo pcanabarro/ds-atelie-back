@@ -14,8 +14,15 @@ export default class ProductsController {
 
   static createProduct = (req, res) => {
     const { product } = req.body
+    // {
+    //   name: "",
+    //   category_id: 1,
+    //   description: "the lazy fox",
+    //   price: 2.3
+    // }
+
     try {
-      Database.query(constants.QUERIES.CREATE_PRODUCT, (product.name, product.price))
+      Database.query(constants.QUERIES.CREATE_PRODUCT, ( product.name, product.category_id, product.description, product.price ))
       console.log(`product ${product} created!`)
       res.status(200).json({ data: "Product Created" })
     } catch (e) {
