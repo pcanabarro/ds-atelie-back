@@ -8,7 +8,7 @@ dotenv.config()
 class App {
   constructor() {
     this._app = express()
-    this._port = process.env.PORT || 3000
+    this._port = process.env.SERVER_PORT || 3000
     this._app.use(cors())
     this._app.use(express.json())
     this._app.use('/api', Router.getRouter())
@@ -16,6 +16,7 @@ class App {
   }
 
   start() {
+    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
     this._app.listen(this._port)
   }
 }

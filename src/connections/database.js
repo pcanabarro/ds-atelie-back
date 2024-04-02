@@ -5,14 +5,15 @@ dotenv.config()
 
 class Database {
   constructor() {
-    this._pool = mysql.createPool({
-      user: process.env.DB_USER,
+    this._pool = mysql.createConnection({
       host: process.env.DB_HOST,
-      database: process.env.DB_NAME,
+      user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       port: process.env.DB_PORT
     })
 
+    this.createDatabase()
     this.createTables()
     this.seed()
 
@@ -23,34 +24,25 @@ class Database {
 
   async query(sql, values) {
     return new Promise((resolve, reject) => {
-      this._pool.getConnection((err, connection) => {
-        if (err) {
-          console.error('Error getting connection from pool', err)
-          reject(err)
+      this._pool.query(sql, values, (error, results, fields) => {
+        if (error) {
+          reject(error);
         } else {
-          connection.query(sql, values, (error, results, fields) => {
-            connection.release()
-            if (error) {
-              console.error('Error executing query', error)
-              reject(error)
-            } else {
-              resolve(results)
-            }
-          })
+          resolve(results);
         }
-      })
-    })
+      });
+    });
   }
 
   async seed() {
     try {
-      await this.query("INSERT INTO Categorias (nome) VALUES ('Joias')")
-      await this.query("INSERT INTO Categorias (nome) VALUES ('Acessórios')")
-      await this.query("INSERT INTO Categorias (nome) VALUES ('Produtos Masculinos')")
+      await this.query("INSERT INTO Categorias (nome) VALUES ('Joias');")
+      await this.query("INSERT INTO Categorias (nome) VALUES ('Acessórios');")
+      await this.query("INSERT INTO Categorias (nome) VALUES ('Produtos Masculinos');")
 
-      await this.query("INSERT INTO Produtos (nome, categoria_id, material, preco) VALUES ('Colar de Diamante', 1, 'Diamante', 5000.00)")
-      await this.query("INSERT INTO Produtos (nome, categoria_id, material, preco) VALUES ('Cordinha para Óculos', 2, 'Couro', 20.00)")
-      await this.query("INSERT INTO Produtos (nome, categoria_id, material, preco) VALUES ('Relógio de Pulso', 3, 'Aço Inoxidável', 200.00)")
+      // await this.query("INSERT INTO Produtos (nome, categoria_id, descricao, preco) VALUES ('Colar de Diamante', 1, 'Diamante', 5000.00)")
+      // await this.query("INSERT INTO Produtos (nome, categoria_id, descricao, preco) VALUES ('Cordinha para Óculos', 2, 'Couro', 20.00)")
+      // await this.query("INSERT INTO Produtos (nome, categoria_id, descricao, preco) VALUES ('Relógio de Pulso', 3, 'Aço Inoxidável', 200.00)")
 
       console.log('Seed method executed successfully')
     } catch (err) {
@@ -79,6 +71,16 @@ class Database {
       `)
 
       console.log('Tables created successfully')
+    } catch (err) {
+      console.error('Error creating tables', err)
+    }
+  }
+
+  async createDatabase() {
+    try {
+      await this.query("CREATE DATABASE ds-atelie;")
+
+      console.log('Database created successfully')
     } catch (err) {
       console.error('Error creating tables', err)
     }
