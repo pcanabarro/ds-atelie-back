@@ -9,6 +9,7 @@ export default class Router {
     router.get('/ping', (req, res) => { res.status(200).json({ data: 'Pong!' })})
 
     router.get('/products', ProductsController.getProducts)
+    router.get('/seed', ProductsController.seed)
     router.post('/products', ProductsController.createProduct)
     return router
   }

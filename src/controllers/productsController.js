@@ -2,6 +2,16 @@ import Database from '../connections/database.js'
 import constants from '../utils/constants.js'
 
 export default class ProductsController {
+  static seed = async (req, res) => {
+    try {
+      result = await Database.seed()
+      console.log(result)
+      res.status(200).json({data: result})
+    } catch (e) {
+      console.log(e)
+      res.status(500).json({data: e})
+    }
+  }
   static getProducts = async (req, res) => {
     try {
       result = await Database.query(constants.QUERIES.ALL_PRODUCTS)

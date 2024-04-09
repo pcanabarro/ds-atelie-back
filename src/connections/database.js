@@ -5,26 +5,30 @@ dotenv.config()
 
 class Database {
   constructor() {
-    this._pool = mysql.createConnection({
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      port: process.env.DB_PORT
+    this.connection = mysql.createConnection({
+      // host: process.env.DB_HOST,
+      // user: process.env.DB_USER,
+      // password: process.env.DB_PASSWORD,
+      // database: process.env.DB_NAME,
+      // port: process.env.DB_PORT
+      host: "localhost",
+      user: "root",
+      password: "mynewpassword",
+      database: "db",
     })
 
-    this.createDatabase()
-    this.createTables()
-    this.seed()
+    this.connection.connect()
+    // this.createTables()
+    // this.seed()
 
-    this._pool.on('error', (err) => {
+    this.connection.on('error', (err) => {
       console.error('Unexpected error', err)
     })
   }
 
   async query(sql, values) {
     return new Promise((resolve, reject) => {
-      this._pool.query(sql, values, (error, results, fields) => {
+      this.connection.query(sql, values, (error, results, fields) => {
         if (error) {
           reject(error);
         } else {
