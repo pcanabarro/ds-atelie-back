@@ -1,4 +1,4 @@
-import mysql from 'mysql'
+import mysql from 'mysql2'
 import dotenv from 'dotenv'
 
 dotenv.config()
@@ -6,20 +6,15 @@ dotenv.config()
 class Database {
   constructor() {
     this.connection = mysql.createConnection({
-      // host: process.env.DB_HOST,
-      // user: process.env.DB_USER,
-      // password: process.env.DB_PASSWORD,
-      // database: process.env.DB_NAME,
-      // port: process.env.DB_PORT
-      host: "localhost",
-      user: "root",
-      password: "mynewpassword",
-      database: "db",
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      port: process.env.DB_PORT
     })
 
     this.connection.connect()
-    // this.createTables()
-    // this.seed()
+    this.createTables()
 
     this.connection.on('error', (err) => {
       console.error('Unexpected error', err)
@@ -27,15 +22,16 @@ class Database {
   }
 
   async query(sql, values) {
-    return new Promise((resolve, reject) => {
-      this.connection.query(sql, values, (error, results, fields) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(results);
-        }
-      });
-    });
+      return new Promise((resolve, reject) => {
+        this.connection.query(sql, values, (err, result, fields) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(result)
+            return result
+          }
+        })
+      })
   }
 
   async seed() {
@@ -44,9 +40,9 @@ class Database {
       await this.query("INSERT INTO Categorias (nome) VALUES ('Acessórios');")
       await this.query("INSERT INTO Categorias (nome) VALUES ('Produtos Masculinos');")
 
-      // await this.query("INSERT INTO Produtos (nome, categoria_id, descricao, preco) VALUES ('Colar de Diamante', 1, 'Diamante', 5000.00)")
-      // await this.query("INSERT INTO Produtos (nome, categoria_id, descricao, preco) VALUES ('Cordinha para Óculos', 2, 'Couro', 20.00)")
-      // await this.query("INSERT INTO Produtos (nome, categoria_id, descricao, preco) VALUES ('Relógio de Pulso', 3, 'Aço Inoxidável', 200.00)")
+      await this.query("INSERT INTO Produtos (nome, categoria_id, descricao, preco) VALUES ('Colar de Diamante', 1, 'Diamante', 5000)")
+      await this.query("INSERT INTO Produtos (nome, categoria_id, descricao, preco) VALUES ('Cordinha para Óculos', 2, 'Couro', 20)")
+      await this.query("INSERT INTO Produtos (nome, categoria_id, descricao, preco) VALUES ('Relógio de Pulso', 3, 'Aço Inoxidável', 200)")
 
       console.log('Seed method executed successfully')
     } catch (err) {

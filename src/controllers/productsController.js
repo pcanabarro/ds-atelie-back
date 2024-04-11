@@ -4,7 +4,7 @@ import constants from '../utils/constants.js'
 export default class ProductsController {
   static seed = async (req, res) => {
     try {
-      result = await Database.seed()
+      const result = await Database.seed()
       console.log(result)
       res.status(200).json({data: result})
     } catch (e) {
@@ -12,10 +12,28 @@ export default class ProductsController {
       res.status(500).json({data: e})
     }
   }
+
   static getProducts = async (req, res) => {
     try {
-      result = await Database.query(constants.QUERIES.ALL_PRODUCTS)
-      res.status(200).json({ data: result.rows })
+      const result = await Database.query(constants.QUERIES.ALL_PRODUCTS)
+      res.status(200).json({ data: result })
+    } catch (e) {
+      console.error('error fetching products list', e.message)
+      res.status(500).json({ data: e })
+    }
+  }
+
+  static getProduct = async (req, res) => {
+    const { id } = req.params
+    const { itemId, categoryId } = req.query
+    // console.log(Boolean(filter(item => {console.log(item)})))
+
+    console.log(req.query)
+    const idType = (categoryId ? "categoria_id" : "id" )
+
+    try {
+      const result = await Database.query(constants.QUERIES.SPECIFIC_PRODUCTS, [idType, id])
+      res.status(200).json({ data: result })
     } catch (e) {
       console.error('error fetching products list', e.message)
       res.status(500).json({ data: e })
