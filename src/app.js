@@ -1,7 +1,7 @@
-import cors from 'cors'
-import dotenv from 'dotenv'
-import express from 'express'
-import Router from './routes/router.js'
+const cors = require('cors')
+const dotenv = require('dotenv')
+const express = require('express')
+const Router = require('./routes/router.js')
 
 dotenv.config()
 
@@ -21,4 +21,4 @@ class App {
   }
 }
 
-export default new App().start()
+module.exports = new App().start()

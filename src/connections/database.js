@@ -1,90 +1,94 @@
-import mysql from 'mysql2'
-import dotenv from 'dotenv'
+const pg = require('pg');
+const dotenv = require('dotenv');
+const constants = require('../utils/constants');
 
-dotenv.config()
+dotenv.config();
 
 class Database {
   constructor() {
-    this.connection = mysql.createConnection({
-      host: process.env.DB_HOST,
+    this._client = new pg.Client({
       user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
+      host: process.env.DB_HOST,
       database: process.env.DB_NAME,
-      port: process.env.DB_PORT
-    })
+      password: process.env.DB_PASSWORD,
+      port: process.env.DB_PORT,
+    });
 
-    this.connection.connect()
-    this.createTables()
+    this.connect();
+    this.createTables();
+    // this.seed();
 
-    this.connection.on('error', (err) => {
-      console.error('Unexpected error', err)
-    })
+    this._client.on('connect', () => {
+      console.log('Connected');
+    });
+
+    this._client.on('error', (err) => {
+      console.error('Unexpected error', err);
+    });
   }
 
-  async query(sql, values) {
-      return new Promise((resolve, reject) => {
-        this.connection.query(sql, values, (err, result, fields) => {
-          if (err) {
-            reject(err)
-          } else {
-            resolve(result)
-            return result
-          }
-        })
-      })
+  async connect() {
+    try {
+      await this._client.connect();
+    } catch (err) {
+      console.error('Error connecting to the database', err);
+    }
+  }
+
+  async query(query, params) {
+    try {
+      const result = await this._client.query(query, params);
+      return result.rows;
+    } catch (e) {
+      console.error('Error executing query', e);
+    }
   }
 
   async seed() {
     try {
-      await this.query("INSERT INTO Categorias (nome) VALUES ('Joias');")
-      await this.query("INSERT INTO Categorias (nome) VALUES ('Acessórios');")
-      await this.query("INSERT INTO Categorias (nome) VALUES ('Produtos Masculinos');")
+      await this.query("INSERT INTO categorias (categoria_nome) VALUES ('Aneis')");
+      await this.query("INSERT INTO categorias (categoria_nome) VALUES ('Brincos')");
+      await this.query("INSERT INTO categorias (categoria_nome) VALUES ('Colares')");
+      await this.query("INSERT INTO categorias (categoria_nome) VALUES ('Conjuntos')");
+      await this.query("INSERT INTO categorias (categoria_nome) VALUES ('Pulseiras')");
+      await this.query("INSERT INTO categorias (categoria_nome) VALUES ('Masculinos')");
 
-      await this.query("INSERT INTO Produtos (nome, categoria_id, descricao, preco) VALUES ('Colar de Diamante', 1, 'Diamante', 5000)")
-      await this.query("INSERT INTO Produtos (nome, categoria_id, descricao, preco) VALUES ('Cordinha para Óculos', 2, 'Couro', 20)")
-      await this.query("INSERT INTO Produtos (nome, categoria_id, descricao, preco) VALUES ('Relógio de Pulso', 3, 'Aço Inoxidável', 200)")
+      await this.query("INSERT INTO produtos (produto_nome, produto_preco, produto_descricao, produto_material, produto_categoria_id) VALUES ('Colar de Diamante', 11, 'Diamante', 'Diamante', 1)");
+      await this.query("INSERT INTO produtos (produto_nome, produto_preco, produto_descricao, produto_material, produto_categoria_id) VALUES ('Cordinha para Óculos', 22, 'Couro', 'Couro', 2)");
+      await this.query("INSERT INTO produtos (produto_nome, produto_preco, produto_descricao, produto_material, produto_categoria_id) VALUES ('Relógio de Pulso', 33, 'Aço Inoxidável', 'Aço Inoxidável', 3)");
 
-      console.log('Seed method executed successfully')
+      console.log('Seed method executed successfully');
     } catch (err) {
-      console.error('Error executing seed method', err)
+      console.error('Error executing seed method', err);
     }
   }
 
   async createTables() {
     try {
       await this.query(`
-        CREATE TABLE IF NOT EXISTS Categorias (
-          id INT AUTO_INCREMENT PRIMARY KEY,
-          nome VARCHAR(50)
+        CREATE TABLE IF NOT EXISTS categorias (
+          categoria_id SERIAL PRIMARY KEY,
+          categoria_nome VARCHAR(50)
         )
-      `)
+      `);
 
       await this.query(`
-        CREATE TABLE IF NOT EXISTS Produtos (
-          id INT AUTO_INCREMENT PRIMARY KEY,
-          nome VARCHAR(50),
-          categoria_id INT,
-          descricao VARCHAR(100),
-          preco DECIMAL(10, 2),
-          FOREIGN KEY (categoria_id) REFERENCES Categorias(id)
+        CREATE TABLE IF NOT EXISTS produtos (
+          produto_id SERIAL PRIMARY KEY,
+          produto_nome VARCHAR(100),
+          produto_preco DECIMAL(10, 2),
+          produto_descricao VARCHAR(50),
+          produto_material VARCHAR(50),
+          produto_categoria_id INT,
+          FOREIGN KEY (produto_categoria_id) REFERENCES categorias(categoria_id)
         )
-      `)
+      `);
 
-      console.log('Tables created successfully')
+      console.log('Tables created successfully');
     } catch (err) {
-      console.error('Error creating tables', err)
-    }
-  }
-
-  async createDatabase() {
-    try {
-      await this.query("CREATE DATABASE ds-atelie;")
-
-      console.log('Database created successfully')
-    } catch (err) {
-      console.error('Error creating tables', err)
+      console.error('Error creating tables', err);
     }
   }
 }
 
-export default new Database()
+module.exports = new Database();

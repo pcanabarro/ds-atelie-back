@@ -9,21 +9,20 @@ services:
     ports:
       - 3001:3001
     depends_on:
-      - mysql
+      - postgres
 
-  mysql:
-    image: mysql:latest
-    container_name: mysql-db
+  postgres:
+    image: postgres:latest
+    container_name: postgres-db
     restart: always
     environment:
-      MYSQL_DATABASE: 'ds'
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'password'
-      MYSQL_ROOT_PASSWORD: 'password'
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: ds
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql-data:/var/lib/mysqlql/data
+      - postgres-data:/var/lib/postgresql/data
 
 volumes:
-  mysql-data:
+  postgres-data:
