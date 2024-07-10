@@ -53,9 +53,9 @@ class Database {
       await this.query("INSERT INTO categorias (categoria_nome) VALUES ('Pulseiras')");
       await this.query("INSERT INTO categorias (categoria_nome) VALUES ('Masculinos')");
 
-      await this.query("INSERT INTO produtos (produto_nome, produto_preco, produto_descricao, produto_material, produto_categoria_id) VALUES ('Colar de Diamante', 11, 'Diamante', 'Diamante', 1)");
-      await this.query("INSERT INTO produtos (produto_nome, produto_preco, produto_descricao, produto_material, produto_categoria_id) VALUES ('Cordinha para Óculos', 22, 'Couro', 'Couro', 2)");
-      await this.query("INSERT INTO produtos (produto_nome, produto_preco, produto_descricao, produto_material, produto_categoria_id) VALUES ('Relógio de Pulso', 33, 'Aço Inoxidável', 'Aço Inoxidável', 3)");
+      // await this.query("INSERT INTO produtos (produto_nome, produto_preco, produto_descricao, produto_material, produto_categoria_id) VALUES ('Colar de Diamante', 11, 'Diamante', 'Diamante', 1)");
+      // await this.query("INSERT INTO produtos (produto_nome, produto_preco, produto_descricao, produto_material, produto_categoria_id) VALUES ('Cordinha para Óculos', 22, 'Couro', 'Couro', 2)");
+      // await this.query("INSERT INTO produtos (produto_nome, produto_preco, produto_descricao, produto_material, produto_categoria_id) VALUES ('Relógio de Pulso', 33, 'Aço Inoxidável', 'Aço Inoxidável', 3)");
 
       console.log('Seed method executed successfully');
     } catch (err) {

@@ -53,7 +53,7 @@ module.exports = class ProductsController {
 
   // POST localhost:3001/api/products
   static createProduct = (req, res) => {
-    const { product } = req.body
+    const product = req.body
     // {
     //   produto_nome: "Anel bababa",
     //   produto_preco: 10,
@@ -63,12 +63,12 @@ module.exports = class ProductsController {
     // }
 
     try {
-      Database.query(constants.QUERIES.CREATE_PRODUCT, [product.name, product.category_id, product.description, product.price])
-      console.log(`product ${product} created!`)
+      Database.query(constants.QUERIES.CREATE_PRODUCT, [product.produto_nome, product.produto_preco, product.produto_descricao, product.produto_material, product.produto_categoria_id])
+      console.log(`product ${product.produto_nome} created!`)
       res.status(200).json({ data: "Product Created" })
     } catch (e) {
       console.error('error creating product', e.message)
-      res.status(500).json({ data: e })
+      res.status(500).json({ data: e.message })
     }
   }
 
@@ -78,7 +78,7 @@ module.exports = class ProductsController {
 
     try {
       Database.query(constants.QUERIES.DELETE_PRODUCT, [id])
-      console.log(`product ${product} deleted!`)
+      console.log(`product ${id} deleted!`)
       res.status(200).json({ data: `Product ${id} Deleted` })
     } catch (e) {
       console.error('error deleting product', e.message)
