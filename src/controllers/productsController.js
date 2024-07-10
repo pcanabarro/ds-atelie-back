@@ -63,7 +63,7 @@ module.exports = class ProductsController {
     // }
 
     try {
-      Database.query(constants.QUERIES.CREATE_PRODUCT, [product.produto_nome, product.produto_preco, product.produto_descricao, product.produto_material, product.produto_categoria_id])
+      Database.query(constants.QUERIES.CREATE_PRODUCT, [product.nome, product.preco, product.descricao, product.material, product.categoria_id])
       console.log(`product ${product.produto_nome} created!`)
       res.status(200).json({ data: "Product Created" })
     } catch (e) {
