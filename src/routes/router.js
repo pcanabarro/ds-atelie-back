@@ -8,7 +8,7 @@ module.exports = class Router {
     router.get('/health', (req, res) => { res.status(200).json({ data: req.url })})
     router.get('/ping', (req, res) => { res.status(200).json({ data: 'Pong!' })})
 
-    router.get('/products/seed', ProductsController.seed)
+    router.get('/products/seedMyDatabase', ProductsController.seed)
     router.get('/products', ProductsController.getProducts)
     router.get('/products/:id', ProductsController.getProductById)
     router.get('/products/category/:id', ProductsController.getProductByCategory)
